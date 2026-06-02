@@ -1,0 +1,1321 @@
+html_content = """<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>2026 FIFA Dünya Kupası | Turnuva Efsanesi</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;800&family=Oswald:wght@500;700&family=Press+Start+2P&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-dark: #0a1128;
+            --card-bg: #131f42;
+            --text-main: #f0f4f8;
+            --accent-red: #e63946;
+            --accent-blue: #457b9d;
+            --accent-green: #2a9d8f;
+            --gold: #f4a261;
+            --pixel-font: 'Press Start 2P', cursive;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            background-image: radial-gradient(circle at top right, #1a2a5c 0%, transparent 40%),
+                              radial-gradient(circle at bottom left, #1a2a5c 0%, transparent 40%);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* Global Score Banner */
+        .score-banner {
+            background: rgba(0,0,0,0.6);
+            padding: 12px 20px;
+            text-align: center;
+            font-family: var(--pixel-font);
+            font-size: 0.75rem;
+            color: var(--gold);
+            border-bottom: 2px dashed var(--gold);
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            letter-spacing: 1px;
+        }
+
+        /* Navbar / Tabs */
+        nav {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 15px;
+            padding: 20px;
+            background: rgba(10, 17, 40, 0.9);
+            backdrop-filter: blur(10px);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            border-bottom: 2px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .tab-btn {
+            background: transparent;
+            border: 2px solid var(--accent-blue);
+            color: var(--text-main);
+            padding: 12px 25px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            font-family: 'Oswald', sans-serif;
+            letter-spacing: 1px;
+        }
+
+        .tab-btn:hover {
+            background: rgba(69, 123, 157, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .tab-btn.active {
+            background: var(--accent-red);
+            border-color: var(--accent-red);
+            box-shadow: 0 4px 15px rgba(230, 57, 70, 0.4);
+        }
+
+        .tab-btn.arcade-btn {
+            border-color: var(--accent-green);
+            font-family: var(--pixel-font);
+            font-size: 0.65rem;
+            padding: 15px 20px;
+        }
+        
+        .tab-btn.arcade-btn.active {
+            background: var(--accent-green);
+            box-shadow: 0 4px 15px rgba(42, 157, 143, 0.5);
+        }
+
+        /* Content Sections */
+        .section {
+            display: none;
+            padding: 40px 20px;
+            max-width: 1300px;
+            margin: 0 auto;
+            animation: fadeIn 0.4s ease;
+        }
+
+        .section.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .page-title {
+            text-align: center;
+            font-family: 'Oswald', sans-serif;
+            font-size: 3rem;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            background: linear-gradient(90deg, #fff, #a8b2d1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: var(--accent-blue);
+            margin-bottom: 40px;
+            font-size: 1.1rem;
+        }
+
+        /* Groups Grid */
+        .groups-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+        }
+
+        .group-card {
+            background: var(--card-bg);
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+            border-top: 4px solid var(--accent-blue);
+            transition: transform 0.3s ease;
+        }
+
+        .group-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .group-header {
+            background: rgba(0,0,0,0.2);
+            padding: 15px 20px;
+            font-family: 'Oswald', sans-serif;
+            font-size: 1.4rem;
+            letter-spacing: 1px;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .team-list {
+            list-style: none;
+            padding: 10px 20px 20px;
+        }
+
+        .team-item {
+            padding: 12px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+            display: flex;
+            align-items: center;
+            font-weight: 600;
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+
+        .team-item:last-child {
+            border-bottom: none;
+        }
+
+        .team-item:hover {
+            color: var(--gold);
+        }
+
+        .team-item.turkey-highlight {
+            color: var(--accent-red);
+            font-weight: 800;
+        }
+        
+        .team-item.turkey-highlight:hover {
+            color: #ff6b77;
+        }
+
+        /* Turkey Squad Section */
+        .squad-hero {
+            background: linear-gradient(135deg, var(--accent-red) 0%, #8a1c25 100%);
+            border-radius: 20px;
+            padding: 40px;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(230, 57, 70, 0.3);
+            margin-bottom: 30px;
+        }
+
+        .squad-hero h2 {
+            font-family: 'Oswald', sans-serif;
+            font-size: 3.5rem;
+            line-height: 1.1;
+            margin-bottom: 10px;
+        }
+        
+        /* TD Slot */
+        .td-wrapper {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 30px;
+        }
+        
+        .td-card {
+            background: rgba(244, 162, 97, 0.1);
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+            border: 2px solid var(--gold);
+            box-shadow: 0 5px 15px rgba(244, 162, 97, 0.2);
+            transition: all 0.3s;
+            width: 220px;
+        }
+        
+        .td-card:hover {
+            transform: scale(1.05);
+            background: rgba(244, 162, 97, 0.2);
+        }
+
+        .players-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: 20px;
+        }
+
+        .player-card {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+            border: 1px solid rgba(230, 57, 70, 0.2);
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .player-card:hover {
+            background: var(--accent-red);
+            transform: scale(1.05);
+            border-color: #fff;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.4);
+        }
+
+        .player-pixel-img {
+            width: 85px;
+            height: 85px;
+            object-fit: cover;
+            margin: 0 auto 15px auto;
+            display: block;
+            image-rendering: pixelated;
+            border-radius: 12px;
+            background-color: rgba(255, 255, 255, 0.05);
+        }
+
+        .player-icon {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+        }
+
+        .player-name {
+            font-weight: 700;
+            font-size: 1.05rem;
+            margin-bottom: 5px;
+        }
+        
+        .player-pos {
+            font-size: 0.85rem;
+            color: #a8b2d1;
+        }
+        
+        .player-card:hover .player-pos {
+            color: #fff;
+        }
+
+        /* --- İLK 11 KUR SEKMESİ (DRAG & DROP) --- */
+        .lineup-controls {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 20px;
+            align-items: center;
+        }
+        
+        .formation-select {
+            padding: 10px;
+            background: var(--card-bg);
+            color: white;
+            border: 2px solid var(--accent-blue);
+            border-radius: 8px;
+            font-family: 'Oswald', sans-serif;
+            font-size: 1.1rem;
+            outline: none;
+        }
+        
+        .pitch-container {
+            width: 100%;
+            max-width: 700px;
+            height: 800px;
+            background: #2e7d32;
+            border: 3px solid #fff;
+            margin: 0 auto;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            border-radius: 10px;
+        }
+        
+        /* Saha çizgileri */
+        .pitch-container::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: rgba(255,255,255,0.6);
+        }
+        .pitch-container::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 120px;
+            height: 120px;
+            border: 2px solid rgba(255,255,255,0.6);
+            border-radius: 50%;
+        }
+        .penalty-box-top {
+            position: absolute; top: 0; left: 25%; width: 50%; height: 15%;
+            border: 2px solid rgba(255,255,255,0.6); border-top: none;
+        }
+        .penalty-box-bottom {
+            position: absolute; bottom: 0; left: 25%; width: 50%; height: 15%;
+            border: 2px solid rgba(255,255,255,0.6); border-bottom: none;
+        }
+        
+        .drop-zone {
+            width: 80px;
+            height: 90px;
+            border: 2px dashed rgba(255,255,255,0.6);
+            border-radius: 8px;
+            position: absolute;
+            transform: translate(-50%, -50%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(255,255,255,0.1);
+            transition: background 0.2s;
+        }
+        
+        .drop-zone.drag-over {
+            background: rgba(244, 162, 97, 0.4);
+            border-color: var(--gold);
+        }
+        
+        .bench-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            min-height: 120px;
+            background: rgba(0,0,0,0.4);
+            padding: 20px;
+            margin-top: 30px;
+            border-radius: 12px;
+            border: 1px solid rgba(255,255,255,0.1);
+            justify-content: center;
+        }
+        
+        .draggable-player {
+            width: 70px;
+            cursor: grab;
+            text-align: center;
+            background: var(--card-bg);
+            padding: 5px;
+            border-radius: 8px;
+            border: 1px solid var(--accent-blue);
+            transition: transform 0.2s;
+        }
+        
+        .draggable-player:active {
+            cursor: grabbing;
+            transform: scale(1.1);
+        }
+        
+        .draggable-player img {
+            width: 50px;
+            height: 50px;
+            object-fit: cover;
+            border-radius: 8px;
+            background: rgba(255,255,255,0.1);
+            image-rendering: pixelated;
+        }
+        
+        .draggable-player .bench-name {
+            font-size: 0.65rem;
+            margin-top: 5px;
+            font-weight: 600;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        /* Arcade Section Styles */
+        .arcade-title {
+            font-family: var(--pixel-font);
+            font-size: 1.8rem;
+            text-align: center;
+            color: var(--accent-green);
+            text-shadow: 3px 3px 0px rgba(0,0,0,0.5);
+            margin-bottom: 40px;
+            line-height: 1.5;
+        }
+
+        .minigame-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 30px;
+        }
+
+        .minigame-card {
+            background: var(--card-bg);
+            border: 4px solid #fff;
+            padding: 25px;
+            box-shadow: 8px 8px 0px rgba(0,0,0,0.5);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .minigame-header {
+            font-family: var(--pixel-font);
+            font-size: 0.9rem;
+            margin-bottom: 15px;
+            color: var(--gold);
+            border-bottom: 2px dashed rgba(255,255,255,0.2);
+            padding-bottom: 10px;
+            text-align: center;
+        }
+
+        .pixel-btn {
+            font-family: var(--pixel-font);
+            font-size: 0.65rem;
+            padding: 12px 15px;
+            background: var(--accent-blue);
+            color: #fff;
+            border: 3px solid #fff;
+            cursor: pointer;
+            box-shadow: 4px 4px 0px rgba(0,0,0,0.5);
+            transition: transform 0.1s;
+            text-transform: uppercase;
+            width: 100%;
+            margin-top: 15px;
+        }
+        
+        .pixel-btn:active {
+            transform: translate(4px, 4px);
+            box-shadow: none;
+        }
+        
+        .pixel-btn.btn-red { background: var(--accent-red); }
+        .pixel-btn.btn-green { background: var(--accent-green); }
+        
+        /* Quiz Specific */
+        .quiz-option {
+            background: rgba(255,255,255,0.05);
+            border: 2px solid rgba(255,255,255,0.1);
+            padding: 12px;
+            margin-bottom: 10px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.2s;
+            border-radius: 5px;
+        }
+        .quiz-option:hover { background: rgba(255,255,255,0.1); border-color: var(--gold); }
+        .quiz-progress { font-size: 0.8rem; color: var(--text-muted); margin-bottom: 10px; font-weight: bold; }
+
+        /* Timing Penalty Specific */
+        .timing-bar-container {
+            width: 100%; height: 30px; background: #222; border: 3px solid #fff; position: relative; margin: 20px 0; overflow: hidden;
+        }
+        .timing-zone-red { position: absolute; height: 100%; width: 35%; background: var(--accent-red); }
+        .timing-zone-green { position: absolute; height: 100%; width: 30%; left: 35%; background: var(--accent-green); }
+        .timing-zone-red.right { left: 65%; }
+        .timing-cursor {
+            width: 6px; height: 100%; background: #fff; position: absolute; left: 0; top: 0; box-shadow: 0 0 10px #fff; z-index: 2;
+        }
+        .goal-post {
+            height: 100px; border: 4px solid #fff; border-bottom: none; display: flex; align-items: flex-end; justify-content: center;
+            background: repeating-linear-gradient(45deg, rgba(255,255,255,0.05), rgba(255,255,255,0.05) 10px, transparent 10px, transparent 20px);
+            margin-bottom: 10px; position: relative;
+        }
+        .goalkeeper { font-size: 2.5rem; transition: left 0.2s ease, bottom 0.2s ease; position: absolute; bottom: 0; left: 50%; transform: translateX(-50%); }
+
+        /* Memory Game Specific */
+        .memory-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-top: 15px; flex-grow: 1; }
+        .memory-card {
+            background: var(--accent-blue); border: 2px solid #fff; height: 60px; display: flex; align-items: center; justify-content: center;
+            font-size: 1.8rem; cursor: pointer; box-shadow: 2px 2px 0px rgba(0,0,0,0.5); transition: transform 0.2s;
+        }
+        .memory-card.flipped { background: #fff; transform: rotateY(180deg); cursor: default; }
+        .memory-card.matched { background: var(--accent-green); border-color: #fff; cursor: default; transform: scale(0.95); }
+
+        .feedback-text { font-family: var(--pixel-font); font-size: 0.65rem; margin-top: 15px; min-height: 20px; line-height: 1.4; text-align: center; }
+
+        /* Modal Structure */
+        .modal-overlay {
+            position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.7); backdrop-filter: blur(5px);
+            display: flex; align-items: center; justify-content: center; z-index: 1000; opacity: 0; pointer-events: none; transition: opacity 0.3s ease;
+        }
+        .modal-overlay.active { opacity: 1; pointer-events: all; }
+        .modal-content {
+            background: var(--card-bg); border-radius: 15px; padding: 30px; max-width: 420px; width: 90%;
+            border: 2px solid var(--accent-blue); transform: translateY(20px); transition: transform 0.3s ease; position: relative;
+        }
+        .modal-overlay.active .modal-content { transform: translateY(0); }
+        .modal-close { position: absolute; top: 15px; right: 20px; font-size: 1.6rem; cursor: pointer; color: var(--text-main); background: none; border: none; }
+        .modal-title { font-family: 'Oswald', sans-serif; font-size: 1.9rem; margin-bottom: 5px; color: var(--gold); }
+        .modal-subtitle { font-size: 0.95rem; color: #a8b2d1; margin-bottom: 20px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 10px; }
+        .modal-stat { display: flex; justify-content: space-between; margin-bottom: 14px; font-size: 1.05rem; }
+        .stat-label { font-weight: 600; color: var(--accent-blue); }
+        .stat-value { font-weight: 800; }
+
+        @media (max-width: 768px) {
+            .squad-hero h2 { font-size: 2.3rem; }
+            .arcade-title { font-size: 1.3rem; }
+            nav { flex-direction: column; width: 100%; }
+            .tab-btn { width: 100%; text-align: center; }
+            .pitch-container { height: 600px; }
+            .drop-zone { width: 50px; height: 60px; }
+            .draggable-player { width: 45px; }
+            .draggable-player img { width: 35px; height: 35px; }
+            .draggable-player .bench-name { font-size: 0.5rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="score-banner">
+        <div>KUPA SKORU: <span id="display-score">0</span></div>
+        <div>REKOR: <span id="display-highscore">0</span></div>
+    </div>
+
+    <nav>
+        <button class="tab-btn active" onclick="switchTab('groups-section')">Turnuva Grupları</button>
+        <button class="tab-btn" onclick="switchTab('turkey-section')">Türkiye Kesin Kadro</button>
+        <button class="tab-btn" onclick="switchTab('lineup-section')">İlk 11 Kur</button>
+        <button class="tab-btn arcade-btn" onclick="switchTab('arcade-section')">🕹️ Pixel Arcade</button>
+    </nav>
+
+    <div class="modal-overlay" id="info-modal" onclick="closeModal(event)">
+        <div class="modal-content" onclick="event.stopPropagation()">
+            <button class="modal-close" onclick="closeModal(event)">&times;</button>
+            <div class="modal-title" id="modal-title">Takım / Oyuncu</div>
+            <div class="modal-subtitle" id="modal-subtitle">Detaylar</div>
+            <div id="modal-body"></div>
+        </div>
+    </div>
+
+    <main id="groups-section" class="section active">
+        <h1 class="page-title">2026 Dünya Kupası Grupları</h1>
+        <p class="subtitle">Tüm takımların Transfermarkt verilerini ve yıldızlarını görmek için üzerlerine tıklayabilirsin.</p>
+        
+        <div class="groups-container">
+            <div class="group-card">
+                <div class="group-header">A GRUBU</div>
+                <ul class="team-list">
+                    <li class="team-item" onclick="showTeamModal('Meksika', '245.00 Mil. €', 'Santiago Gimenez', 'Geniş kadrolu ev sahibi, hücum hattı tehlikeli.')">🇲🇽 Meksika</li>
+                    <li class="team-item" onclick="showTeamModal('Güney Afrika', '58.50 Mil. €', 'Lyle Foster', 'Fizik gücü yüksek, turnuvanın sürpriz adayı.')">🇿🇦 Güney Afrika</li>
+                    <li class="team-item" onclick="showTeamModal('Güney Kore', '175.00 Mil. €', 'Heung-min Son, Kim Min-jae', 'Asya kıtasının en disiplinli ve tehlikeli takımı.')">🇰🇷 Güney Kore</li>
+                    <li class="team-item" onclick="showTeamModal('Çekya', '138.00 Mil. €', 'Tomas Soucek', 'Orta saha direnci yüksek, takım oyunu oynuyorlar.')">🇨🇿 Çekya</li>
+                </ul>
+            </div>
+            <div class="group-card">
+                <div class="group-header">B GRUBU</div>
+                <ul class="team-list">
+                    <li class="team-item" onclick="showTeamModal('Kanada', '210.00 Mil. €', 'Alphonso Davies', 'Hızlı kanat akınları ve atletik yapısıyla öne çıkıyor.')">🇨🇦 Kanada</li>
+                    <li class="team-item" onclick="showTeamModal('Bosna Hersek', '88.00 Mil. €', 'Ermedin Demirovic', 'Geçiş oyunlarında tehlikeli bir Avrupa ekibi.')">🇧🇦 B. Hersek</li>
+                    <li class="team-item" onclick="showTeamModal('Katar', '22.00 Mil. €', 'Akram Afif', 'Teknik kapasitesi yüksek oyunculara sahip Asya ekibi.')">🇶🇦 Katar</li>
+                    <li class="team-item" onclick="showTeamModal('İsviçre', '236.00 Mil. €', 'Manuel Akanji', 'Turnuva kültürü olan, savunması çok sağlam bir ekip.')">🇨🇭 İsviçre</li>
+                </ul>
+            </div>
+            <div class="group-card">
+                <div class="group-header">C GRUBU</div>
+                <ul class="team-list">
+                    <li class="team-item" onclick="showTeamModal('Brezilya', '1.18 Milyar €', 'Vinicius Jr, Rodrygo', 'Kupayı her zaman hedefleyen Sambacılar tam bir yıldızlar topluluğu.')">🇧🇷 Brezilya</li>
+                    <li class="team-item" onclick="showTeamModal('Fas', '315.00 Mil. €', 'Achraf Hakimi', 'Son turnuvanın yarı finalistinin kadrosu hala çok elit.')">🇲🇦 Fas</li>
+                    <li class="team-item" onclick="showTeamModal('Haiti', '14.50 Mil. €', 'Frantzdy Pierrot', 'Kuzey Amerika kıtasından gelen mütevazı ve savaşçı kadro.')">🇭🇹 Haiti</li>
+                    <li class="team-item" onclick="showTeamModal('İskoçya', '212.00 Mil. €', 'Andrew Robertson', 'Sert savunma ve bitmeyen kondisyonlarıyla meşhurlar.')">🏴󠁧󠁢󠁳󠁣󠁴󠁿 İskoçya</li>
+                </ul>
+            </div>
+            <div class="group-card" style="border-top-color: var(--accent-red);">
+                <div class="group-header">D GRUBU</div>
+                <ul class="team-list">
+                    <li class="team-item" onclick="showTeamModal('ABD', '357.00 Mil. €', 'Christian Pulisic', 'Genç ve dinamik kadrosuyla evinde gruptan lider çıkmak istiyor.')">🇺🇸 ABD</li>
+                    <li class="team-item" onclick="showTeamModal('Paraguay', '144.00 Mil. €', 'Julio Enciso', 'Güney Amerika sertliğini ve kontra atak gücünü yansıtıyorlar.')">🇵🇾 Paraguay</li>
+                    <li class="team-item" onclick="showTeamModal('Avustralya', '51.20 Mil. €', 'Harry Souttar', 'Fiziksel üstünlükleri ve duran toplarıyla tehlikeliler.')">🇦🇺 Avustralya</li>
+                    <li class="team-item turkey-highlight" onclick="showTeamModal('Türkiye', '440.20 Mil. €', 'Arda Güler, Kenan Yıldız', 'D Grubunun en yüksek piyasa değerine sahip lider adayı Bizim Çocuklar!')">🇹🇷 TÜRKİYE</li>
+                </ul>
+            </div>
+            <div class="group-card">
+                <div class="group-header">E GRUBU</div>
+                <ul class="team-list">
+                    <li class="team-item" onclick="showTeamModal('Almanya', '890.00 Mil. €', 'Jamal Musiala, Florian Wirtz', 'Panzerler yeni jenerasyonuyla kupayı yeniden kaldırma peşinde.')">🇩🇪 Almanya</li>
+                    <li class="team-item" onclick="showTeamModal('Curaçao', '11.00 Mil. €', 'Juninho Bacuna', 'Turnuvanın en az bütçeli ama en sempatik takımlarından biri.')">🇨🇼 Curaçao</li>
+                    <li class="team-item" onclick="showTeamModal('Fildişi Sahili', '278.00 Mil. €', 'Ousmane Diomande', 'Afrika kıtasının en dengeli ve güçlü fizik kalitesine sahip ekibi.')">🇨🇮 F. Sahili</li>
+                    <li class="team-item" onclick="showTeamModal('Ekvador', '242.00 Mil. €', 'Moises Caicedo', 'Yüksek tempolu pres gücüyle devleri devirebilecek yapıda.')">🇪🇨 Ekvador</li>
+                </ul>
+            </div>
+            <div class="group-card">
+                <div class="group-header">F GRUBU</div>
+                <ul class="team-list">
+                    <li class="team-item" onclick="showTeamModal('Hollanda', '845.00 Mil. €', 'Xavi Simons', 'Total futbol ekolünün modern temsilcileri her bölgede güçlü.')">🇳🇱 Hollanda</li>
+                    <li class="team-item" onclick="showTeamModal('Japonya', '315.00 Mil. €', 'Takefusa Kubo', 'Kusursuz taktik disiplinleri ve hızlı hücumları var.')">🇯🇵 Japonya</li>
+                    <li class="team-item" onclick="showTeamModal('İsveç', '360.00 Mil. €', 'Alexander Isak, Viktor Gyökeres', 'Hücum hatları şu an Avrupa piyasasının en formda oyuncularından kurulu.')">🇸🇪 İsveç</li>
+                    <li class="team-item" onclick="showTeamModal('Tunus', '54.00 Mil. €', 'Ellyes Skhiri', 'Savunma öncelikli ve katı taktik anlayışına sahipler.')">🇹🇳 Tunus</li>
+                </ul>
+            </div>
+            <div class="group-card">
+                <div class="group-header">G GRUBU</div>
+                <ul class="team-list">
+                    <li class="team-item" onclick="showTeamModal('Belçika', '495.00 Mil. €', 'Jeremy Doku', 'Yıldız jenerasyon sonrası yeni bir yapılanma içindeler.')">🇧🇪 Belçika</li>
+                    <li class="team-item" onclick="showTeamModal('Mısır', '125.00 Mil. €', 'Mohamed Salah', 'Salah faktörüyle her an her maçı koparabilecek durumdalar.')">🇪🇬 Mısır</li>
+                    <li class="team-item" onclick="showTeamModal('İran', '42.00 Mil. €', 'Mehdi Taremi', 'Deneyimli hücum hattıyla grupta kalabalık savunma yapacaklar.')">🇮🇷 İran</li>
+                    <li class="team-item" onclick="showTeamModal('Yeni Zelanda', '38.00 Mil. €', 'Chris Wood', 'Okyanusya temsilcisi hava topları ve fizikle oynuyor.')">🇳🇿 Yeni Zelanda</li>
+                </ul>
+            </div>
+            <div class="group-card">
+                <div class="group-header">H GRUBU</div>
+                <ul class="team-list">
+                    <li class="team-item" onclick="showTeamModal('İspanya', '1.02 Milyar €', 'Lamine Yamal, Rodri', 'Son Avrupa şampiyonu, pas kalitesi ve genç yıldızlarıyla favori.')">🇪🇸 İspanya</li>
+                    <li class="team-item" onclick="showTeamModal('Yeşil Burun', '38.50 Mil. €', 'Logan Costa', 'Kolektif oyun anlayışı yüksek bir başka Afrika sürprizi.')">🇨🇻 Yeşil Burun</li>
+                    <li class="team-item" onclick="showTeamModal('Suudi Arabistan', '32.00 Mil. €', 'Firas Al-Buraikan', 'Kendi liglerindeki gelişim sonrası taktiksel olarak evrildiler.')">🇸🇦 S. Arabistan</li>
+                    <li class="team-item" onclick="showTeamModal('Uruguay', '460.00 Mil. €', 'Fede Valverde, Darwin Nunez', 'Bielsa yönetiminde tam bir pres ve agresif hücum makinesi.')">🇺🇾 Uruguay</li>
+                </ul>
+            </div>
+            <div class="group-card">
+                <div class="group-header">I GRUBU</div>
+                <ul class="team-list">
+                    <li class="team-item" onclick="showTeamModal('Fransa', '1.22 Milyar €', 'Kylian Mbappe', 'Turnuvaları kazanmayı en iyi bilen, inanılmaz derin bir kadro.')">🇫🇷 Fransa</li>
+                    <li class="team-item" onclick="showTeamModal('Senegal', '285.00 Mil. €', 'Pape Matar Sarr', 'Afrika nın en dengeli, savunması ve orta sahası güçlü takımı.')">🇸🇳 Senegal</li>
+                    <li class="team-item" onclick="showTeamModal('Irak', '16.00 Mil. €', 'Ali Jasim', 'Ortadoğu jenerasyonunun en hırslı ve sürpriz yapabilecek ekibi.')">🇮🇶 Irak</li>
+                    <li class="team-item" onclick="showTeamModal('Norveç', '490.00 Mil. €', 'Erling Haaland, Martin Ødegaard', 'Haaland gibi bir gol makinesine sahipler, tehlike arz ediyorlar.')">🇳🇴 Norveç</li>
+                </ul>
+            </div>
+            <div class="group-card">
+                <div class="group-header">J GRUBU</div>
+                <ul class="team-list">
+                    <li class="team-item" onclick="showTeamModal('Arjantin', '860.00 Mil. €', 'Lautaro Martinez, Enzo Fernandez', 'Son Dünya Şampiyonu ünvanını korumak için buradalar.')">🇦🇷 Arjantin</li>
+                    <li class="team-item" onclick="showTeamModal('Cezayir', '205.00 Mil. €', 'Rayan Ait-Nouri', 'Kuzey Afrika teknik futbolunun en dirençli temsilcisi.')">🇩🇿 Cezayir</li>
+                    <li class="team-item" onclick="showTeamModal('Avusturya', '268.00 Mil. €', 'Marcel Sabitzer', 'Rangnick sistemiyle tam saha pres uygulayan tehlikeli takım.')">🇦🇹 Avusturya</li>
+                    <li class="team-item" onclick="showTeamModal('Ürdün', '17.50 Mil. €', 'Musa Al-Taamari', 'Asya kupasındaki başarısını bu gruba taşımak istiyorlar.')">🇯🇴 Ürdün</li>
+                </ul>
+            </div>
+            <div class="group-card">
+                <div class="group-header">K GRUBU</div>
+                <ul class="team-list">
+                    <li class="team-item" onclick="showTeamModal('Portekiz', '1.04 Milyar €', 'Rafael Leao, Bruno Fernandes', 'Hücum üretkenliği ve yetenek havuzu muazzam seviyede.')">🇵🇹 Portekiz</li>
+                    <li class="team-item" onclick="showTeamModal('Kongo DC', '128.00 Mil. €', 'Yoane Wissa', 'Fiziksel temasları seven, ikili mücadelelerde yıpratıcı kadro.')">🇨🇩 Kongo</li>
+                    <li class="team-item" onclick="showTeamModal('Özbekistan', '36.00 Mil. €', 'Abbosbek Fayzullaev', 'Disiplinli savunma hatlarıyla sürpriz puan kovalayacaklar.')">🇺🇿 Özbekistan</li>
+                    <li class="team-item" onclick="showTeamModal('Kolombiya', '310.00 Mil. €', 'Luis Diaz', 'Güney Amerika kıtasının en formda ve coşkulu takımlarından.')">🇨🇴 Kolombiya</li>
+                </ul>
+            </div>
+            <div class="group-card">
+                <div class="group-header">L GRUBU</div>
+                <ul class="team-list">
+                    <li class="team-item" onclick="showTeamModal('İngiltere', '1.42 Milyar €', 'Jude Bellingham, Phil Foden', 'Turnuvanın en pahalı og kadro derinliği en yüksek iki takımından biri.')">🇬🇧 İngiltere</li>
+                    <li class="team-item" onclick="showTeamModal('Hırvatistan', '305.00 Mil. €', 'Josko Gvardiol', 'Orta saha tecrübesi og savunma liderliği çok üst düzey.')">🇭🇷 Hırvatistan</li>
+                    <li class="team-item" onclick="showTeamModal('Gana', '245.00 Mil. €', 'Mohammed Kudus', 'Yetenekli gençleri og yüksek atletizmleriyle dikkat çekiyorlar.')">🇬🇭 Gana</li>
+                    <li class="team-item" onclick="showTeamModal('Panama', '24.00 Mil. €', 'Adalberto Carrasquilla', 'Kuzey Amerika kıtasından gelen, kontralarla yaşayan takım.')">🇵🇦 Panama</li>
+                </ul>
+            </div>
+        </div>
+    </main>
+
+    <main id="turkey-section" class="section">
+        <div class="squad-hero">
+            <h2>BİZİM ÇOCUKLAR</h2>
+            <p>2026 FIFA Dünya Kupası A Milli Takım Kesin Kadrosu</p>
+            <p style="font-size: 0.9rem; margin-top: 10px; color: var(--gold);">Oyuncuların üzerine tıklayarak tüm detayları og piyasa değerlerini görebilirsin.</p>
+        </div>
+
+        <div class="td-wrapper">
+            <div class="td-card">
+                <img src="img/vincenzo-montella.png" class="player-pixel-img" alt="Vincenzo Montella" onerror="this.onerror=null; this.outerHTML='<div class=\\'player-icon\\'>👔</div>'">
+                <div class="player-name" style="color: var(--gold); font-size: 1.2rem;">Vincenzo Montella</div>
+                <div class="player-pos" style="color: #fff; font-weight: bold; margin-top: 5px;">Teknik Direktör</div>
+            </div>
+        </div>
+
+        <div class="players-grid" id="players-list">
+            </div>
+    </main>
+
+    <main id="lineup-section" class="section">
+        <h1 class="page-title">İLK 11 KUR</h1>
+        <p class="subtitle">Diziliş seç ve futbolcuları sahadaki boşluklara sürükleyip bırak.</p>
+        
+        <div class="lineup-controls">
+            <label style="font-weight: 600;">Diziliş Seç:</label>
+            <select class="formation-select" id="formation-select" onchange="renderPitch()">
+                <option value="433">4-3-3</option>
+                <option value="4231">4-2-3-1</option>
+                <option value="442">4-4-2</option>
+                <option value="352">3-5-2</option>
+                <option value="451">4-5-1</option>
+            </select>
+        </div>
+
+        <div class="pitch-container" id="pitch">
+            <div class="penalty-box-top"></div>
+            <div class="penalty-box-bottom"></div>
+            </div>
+
+        <div class="bench-container" id="bench-container" ondrop="drop(event)" ondragover="allowDrop(event)">
+            </div>
+    </main>
+
+    <main id="arcade-section" class="section">
+        <h1 class="arcade-title">DÜNYA KUPASI PIXEL ARCADE</h1>
+        
+        <div class="minigame-grid">
+            <div class="minigame-card">
+                <div class="minigame-header">🧠 10 SORULUK BÜYÜK QUİZ</div>
+                <p style="font-size: 0.85rem; margin-bottom: 10px; color: #a8b2d1;">10 farklı soru. 100 üzerinden kaç alacaksın?</p>
+                
+                <div id="quiz-container">
+                    <div class="quiz-progress" id="quiz-progress">Soru: 1 / 10</div>
+                    <div id="quiz-question" style="font-weight: bold; margin-bottom: 15px; font-size: 0.95rem; line-height: 1.4;">Soru yükleniyor...</div>
+                    <div id="quiz-options"></div>
+                    <div id="quiz-feedback" class="feedback-text"></div>
+                    <button id="quiz-next-btn" class="pixel-btn btn-green" style="display:none;" onclick="nextQuizQuestion()">Sonraki Soru</button>
+                    <button id="quiz-restart-btn" class="pixel-btn" style="display:none;" onclick="startQuiz()">Tekrar Oyna</button>
+                </div>
+            </div>
+
+            <div class="minigame-card">
+                <div class="minigame-header">🎯 ŞUT ZAMANLAMASI</div>
+                <p style="font-size: 0.85rem; margin-bottom: 10px; color: #a8b2d1;">Gösterge tam yeşil alandayken "VUR" tuşuna bas!</p>
+                
+                <div class="goal-post" style="height: 80px;">
+                    <div id="pen-gk" class="goalkeeper" style="font-size: 2rem;">🧤</div>
+                </div>
+
+                <div class="timing-bar-container">
+                    <div class="timing-zone-red"></div>
+                    <div class="timing-zone-green"></div>
+                    <div class="timing-zone-red right"></div>
+                    <div id="timing-cursor" class="timing-cursor"></div>
+                </div>
+
+                <button id="pen-shoot-btn" class="pixel-btn btn-blue" onclick="shootTimingPenalty()">ŞUT ÇEK!</button>
+                <button id="pen-restart-btn" class="pixel-btn btn-green" style="display:none;" onclick="startTimingPenalty()">Yeniden Dene</button>
+                <div id="pen-feedback" class="feedback-text" style="color: var(--gold);">Doğru anı bekle...</div>
+            </div>
+
+            <div class="minigame-card">
+                <div class="minigame-header">🧩 KUPA HAFIZASI</div>
+                <p style="font-size: 0.85rem; margin-bottom: 5px; color: #a8b2d1;">Aynı sembolleri eşleştir. Bitirince +50 Puan!</p>
+                
+                <div class="memory-grid" id="memory-grid">
+                    </div>
+                
+                <button id="memory-restart-btn" class="pixel-btn" style="margin-top: 15px; display:none;" onclick="initMemoryGame()">Tekrar Oyna</button>
+                <div id="memory-feedback" class="feedback-text">Tüm kartları eşleştir.</div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // --- SEKMELER ARASI GEÇİŞ MANTIĞI ---
+        function switchTab(tabId) {
+            document.querySelectorAll('.section').forEach(sec => sec.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            document.getElementById(tabId).classList.add('active');
+            const activeBtn = Array.from(document.querySelectorAll('.tab-btn')).find(btn => btn.getAttribute('onclick').includes(tabId));
+            if(activeBtn) activeBtn.classList.add('active');
+        }
+
+        // --- GLOBAL SKOR SİSTEMİ ---
+        let currentScore = parseInt(localStorage.getItem('wc_score_2026')) || 0;
+        let highScore = parseInt(localStorage.getItem('wc_highscore_2026')) || 0;
+
+        function updateScoreDisplay() {
+            document.getElementById('display-score').innerText = currentScore;
+            document.getElementById('display-highscore').innerText = highScore;
+        }
+
+        function addScore(points) {
+            currentScore += points;
+            if (currentScore > highScore) {
+                highScore = currentScore;
+                localStorage.setItem('wc_highscore_2026', highScore);
+            }
+            localStorage.setItem('wc_score_2026', currentScore);
+            updateScoreDisplay();
+        }
+
+        updateScoreDisplay();
+
+        // --- VERİ MODELİ: TÜRKİYE KADROSU ---
+        const playersData = [
+            { name: "Altay Bayındır", pos: "Kaleci", value: "7.00 Mil. €", age: 28 },
+            { name: "Mert Günok", pos: "Kaleci", value: "500 Bin €", age: 37 },
+            { name: "Uğurcan Çakır", pos: "Kaleci", value: "15.00 Mil. €", age: 30 },
+            { name: "Abdülkerim Bardakcı", pos: "Stoper", value: "6.50 Mil. €", age: 31 },
+            { name: "Çağlar Söyüncü", pos: "Stoper", value: "3.50 Mil. €", age: 29 },
+            { name: "Eren Elmalı", pos: "Sol Bek", value: "5.00 Mil. €", age: 25 },
+            { name: "Ferdi Kadıoğlu", pos: "Sol Bek", value: "30.00 Mil. €", age: 26 },
+            { name: "Merih Demiral", pos: "Stoper", value: "14.00 Mil. €", age: 28 },
+            { name: "Mert Müldür", pos: "Sağ Bek", value: "7.00 Mil. €", age: 27 },
+            { name: "Ozan Kabak", pos: "Stoper", value: "10.00 Mil. €", age: 26 },
+            { name: "Samet Akaydin", pos: "Stoper", value: "1.20 Mil. €", age: 32 },
+            { name: "Zeki Çelik", pos: "Sağ Bek", value: "12.00 Mil. €", age: 29 },
+            { name: "Hakan Çalhanoğlu", pos: "Ön Libero / Merkez", value: "18.00 Mil. €", age: 32 },
+            { name: "İsmail Yüksek", pos: "Ön Libero", value: "15.00 Mil. €", age: 27 },
+            { name: "Kaan Ayhan", pos: "Ön Libero / Defans", value: "1.50 Mil. €", age: 31 },
+            { name: "Arda Güler", pos: "On Numara / Sağ Kanat", value: "90.00 Mil. €", age: 21 },
+            { name: "Barış Alper Yılmaz", pos: "Sağ Kanat / Forvet", value: "30.00 Mil. €", age: 25 },
+            { name: "Can Uzun", pos: "On Numara", value: "45.00 Mil. €", age: 20 },
+            { name: "Deniz Gül", pos: "Santrafor", value: "6.00 Mil. €", age: 21 },
+            { name: "İrfan Can Kahveci", pos: "Sağ Kanat", value: "3.00 Mil. €", age: 30 },
+            { name: "Kenan Yıldız", pos: "Sol Kanat / Forvet", value: "75.00 Mil. €", age: 21 },
+            { name: "Kerem Aktürkoğlu", pos: "Sol Kanat", value: "20.00 Mil. €", age: 27 },
+            { name: "Oğuz Aydın", pos: "Sağ Kanat", value: "7.00 Mil. €", age: 25 },
+            { name: "Yunus Akgün", pos: "Sağ Kanat", value: "18.00 Mil. €", age: 25 },
+            { name: "Orkun Kökçü", pos: "Merkez Orta Saha", value: "25.00 Mil. €", age: 25 },
+            { name: "Salih Özcan", pos: "Ön Libero", value: "3.50 Mil. €", age: 28 }
+        ];
+
+        const visualOrder = [
+            "Altay Bayındır", "Mert Günok", "Uğurcan Çakır", "Abdülkerim Bardakcı", "Çağlar Söyüncü", "Eren Elmalı",
+            "Ferdi Kadıoğlu", "Merih Demiral", "Mert Müldür", "Ozan Kabak", "Samet Akaydin", "Zeki Çelik",
+            "Hakan Çalhanoğlu", "İsmail Yüksek", "Kaan Ayhan", "Arda Güler", "Barış Alper Yılmaz", "Can Uzun",
+            "Deniz Gül", "İrfan Can Kahveci", "Kenan Yıldız", "Kerem Aktürkoğlu", "Oğuz Aydın", "Yunus Akgün",
+            "Orkun Kökçü", "Salih Özcan"
+        ];
+
+        function formatNameForFile(name) {
+            const map = { 'ç': 'c', 'ğ': 'g', 'ı': 'i', 'ö': 'o', 'ş': 's', 'ü': 'u', 'Ç': 'C', 'Ğ': 'G', 'İ': 'I', 'Ö': 'O', 'Ş': 'S', 'Ü': 'U' };
+            let formatted = name.replace(/[çğıöşüÇĞİÖŞÜ]/g, match => map[match]);
+            return formatted.toLowerCase().replace(/\s+/g, '-');
+        }
+
+        // Kadro Render
+        const playersContainer = document.getElementById('players-list');
+        visualOrder.forEach(playerName => {
+            const playerInfo = playersData.find(p => p.name === playerName);
+            if (!playerInfo) return;
+
+            const fileName = formatNameForFile(playerName) + '.png';
+            const imgPath = `img/${fileName}`;
+
+            const card = document.createElement('div');
+            card.className = 'player-card';
+            card.onclick = () => showPlayerModal(playerName, playerInfo);
+            
+            card.innerHTML = `
+                <img src="${imgPath}" class="player-pixel-img" alt="${playerName}" onerror="this.onerror=null; this.outerHTML='<div class=\\'player-icon\\'>🇹🇷</div>'">
+                <div class="player-name">${playerName}</div>
+                <div class="player-pos">${playerInfo.pos}</div>
+            `;
+            playersContainer.appendChild(card);
+        });
+
+        // Modals
+        const modal = document.getElementById('info-modal');
+        function showTeamModal(country, value, star, desc) {
+            document.getElementById('modal-title').innerText = country;
+            document.getElementById('modal-subtitle').innerText = "Dünya Kupası Ülke Özeti";
+            document.getElementById('modal-body').innerHTML = `
+                <div class="modal-stat"><span class="stat-label">Kadro Değeri:</span><span class="stat-value" style="color: var(--gold);">${value}</span></div>
+                <div class="modal-stat"><span class="stat-label">Yıldız Oyuncu:</span><span class="stat-value">${star}</span></div>
+                <p style="margin-top: 15px; font-size: 0.95rem; line-height: 1.5; color:#cbd5e1; border-top: 1px solid rgba(255,255,255,0.1); padding-top:10px;">${desc}</p>
+            `;
+            modal.classList.add('active');
+        }
+        function showPlayerModal(name, info) {
+            document.getElementById('modal-title').innerText = name;
+            document.getElementById('modal-subtitle').innerText = "Transfermarkt Oyuncu Analizi";
+            document.getElementById('modal-body').innerHTML = `
+                <div class="modal-stat"><span class="stat-label">Mevki:</span><span class="stat-value">${info.pos}</span></div>
+                <div class="modal-stat"><span class="stat-label">Yaş:</span><span class="stat-value">${info.age}</span></div>
+                <div class="modal-stat"><span class="stat-label">Piyasa Değeri:</span><span class="stat-value" style="color: var(--gold); font-size: 1.2rem;">${info.value}</span></div>
+            `;
+            modal.classList.add('active');
+        }
+        function closeModal(e) {
+            if(e) e.stopPropagation();
+            modal.classList.remove('active');
+        }
+
+
+        // --- İLK 11 KUR SİSTEMİ (DRAG & DROP) ---
+        const formations = {
+            "433": [
+                { id: "gk", top: "85%", left: "50%" },
+                { id: "lb", top: "65%", left: "15%" },
+                { id: "lcb", top: "70%", left: "35%" },
+                { id: "rcb", top: "70%", left: "65%" },
+                { id: "rb", top: "65%", left: "85%" },
+                { id: "lcm", top: "45%", left: "30%" },
+                { id: "cm", top: "50%", left: "50%" },
+                { id: "rcm", top: "45%", left: "70%" },
+                { id: "lw", top: "20%", left: "20%" },
+                { id: "st", top: "15%", left: "50%" },
+                { id: "rw", top: "20%", left: "80%" }
+            ],
+            "4231": [
+                { id: "gk", top: "85%", left: "50%" },
+                { id: "lb", top: "65%", left: "15%" },
+                { id: "lcb", top: "70%", left: "35%" },
+                { id: "rcb", top: "70%", left: "65%" },
+                { id: "rb", top: "65%", left: "85%" },
+                { id: "ldm", top: "55%", left: "35%" },
+                { id: "rdm", top: "55%", left: "65%" },
+                { id: "lam", top: "35%", left: "20%" },
+                { id: "cam", top: "35%", left: "50%" },
+                { id: "ram", top: "35%", left: "80%" },
+                { id: "st", top: "15%", left: "50%" }
+            ],
+            "442": [
+                { id: "gk", top: "85%", left: "50%" },
+                { id: "lb", top: "65%", left: "15%" },
+                { id: "lcb", top: "70%", left: "35%" },
+                { id: "rcb", top: "70%", left: "65%" },
+                { id: "rb", top: "65%", left: "85%" },
+                { id: "lm", top: "40%", left: "15%" },
+                { id: "lcm", top: "45%", left: "35%" },
+                { id: "rcm", top: "45%", left: "65%" },
+                { id: "rm", top: "40%", left: "85%" },
+                { id: "ls", top: "15%", left: "35%" },
+                { id: "rs", top: "15%", left: "65%" }
+            ],
+            "352": [
+                { id: "gk", top: "85%", left: "50%" },
+                { id: "lcb", top: "70%", left: "25%" },
+                { id: "cb", top: "72%", left: "50%" },
+                { id: "rcb", top: "70%", left: "75%" },
+                { id: "lwb", top: "45%", left: "15%" },
+                { id: "lcm", top: "50%", left: "35%" },
+                { id: "cm", top: "55%", left: "50%" },
+                { id: "rcm", top: "50%", left: "65%" },
+                { id: "rwb", top: "45%", left: "85%" },
+                { id: "ls", top: "15%", left: "35%" },
+                { id: "rs", top: "15%", left: "65%" }
+            ],
+            "451": [
+                { id: "gk", top: "85%", left: "50%" },
+                { id: "lb", top: "65%", left: "15%" },
+                { id: "lcb", top: "70%", left: "35%" },
+                { id: "rcb", top: "70%", left: "65%" },
+                { id: "rb", top: "65%", left: "85%" },
+                { id: "lm", top: "40%", left: "15%" },
+                { id: "lcm", top: "45%", left: "35%" },
+                { id: "cm", top: "50%", left: "50%" },
+                { id: "rcm", top: "45%", left: "65%" },
+                { id: "rm", top: "40%", left: "85%" },
+                { id: "st", top: "15%", left: "50%" }
+            ]
+        };
+
+        function initLineup() {
+            // Yedek kulübesini doldur
+            const bench = document.getElementById('bench-container');
+            bench.innerHTML = "";
+            visualOrder.forEach(playerName => {
+                const id = formatNameForFile(playerName);
+                const imgPath = `img/${id}.png`;
+                
+                const el = document.createElement('div');
+                el.className = 'draggable-player';
+                el.draggable = true;
+                el.id = 'drag-' + id;
+                el.ondragstart = drag;
+                
+                el.innerHTML = `
+                    <img src="${imgPath}" alt="${playerName}" onerror="this.onerror=null; this.src='data:image/svg+xml;utf8,<svg xmlns=\\'http://www.w3.org/2000/svg\\' width=\\'50\\' height=\\'50\\'><rect width=\\'50\\' height=\\'50\\' fill=\\'red\\'/><text x=\\'50%\\' y=\\'50%\\' dominant-baseline=\\'middle\\' text-anchor=\\'middle\\' font-size=\\'20\\'>🇹🇷</text></svg>'">
+                    <div class="bench-name">${playerName.split(' ').pop()}</div>
+                `;
+                bench.appendChild(el);
+            });
+            renderPitch();
+        }
+
+        function renderPitch() {
+            const pitch = document.getElementById('pitch');
+            // Önce sahadaki oyuncuları kulübeye geri gönder
+            const existingPlayers = pitch.querySelectorAll('.draggable-player');
+            const bench = document.getElementById('bench-container');
+            existingPlayers.forEach(p => bench.appendChild(p));
+            
+            // Eski alanları temizle (çizgiler hariç)
+            const oldZones = pitch.querySelectorAll('.drop-zone');
+            oldZones.forEach(z => z.remove());
+
+            // Yeni diziliş noktalarını yarat
+            const formVal = document.getElementById('formation-select').value;
+            const positions = formations[formVal];
+            
+            positions.forEach(pos => {
+                const zone = document.createElement('div');
+                zone.className = 'drop-zone';
+                zone.id = 'zone-' + pos.id;
+                zone.style.top = pos.top;
+                zone.style.left = pos.left;
+                zone.ondrop = drop;
+                zone.ondragover = allowDrop;
+                zone.ondragenter = (e) => e.target.classList.add('drag-over');
+                zone.ondragleave = (e) => e.target.classList.remove('drag-over');
+                pitch.appendChild(zone);
+            });
+        }
+
+        function allowDrop(ev) {
+            ev.preventDefault();
+        }
+
+        function drag(ev) {
+            ev.dataTransfer.setData("text", ev.target.id);
+        }
+
+        function drop(ev) {
+            ev.preventDefault();
+            const data = ev.dataTransfer.getData("text");
+            const draggedEl = document.getElementById(data);
+            const bench = document.getElementById('bench-container');
+            
+            // Hedef alanından .drag-over sınıfını kaldır
+            if(ev.target.classList.contains('drop-zone')) {
+                ev.target.classList.remove('drag-over');
+            }
+
+            let dropTarget = ev.target;
+
+            // Eğer başka bir futbolcunun üzerine bırakıldıysa (takas mantığı)
+            if (dropTarget.closest('.draggable-player')) {
+                const occupant = dropTarget.closest('.draggable-player');
+                const zone = occupant.parentElement;
+                
+                if (zone.classList.contains('drop-zone')) {
+                    bench.appendChild(occupant); // Eski oyuncuyu kulübeye yolla
+                    zone.appendChild(draggedEl); // Yeni oyuncuyu alana yerleştir
+                }
+            } 
+            // Eğer boş veya dolu bir zone'a bırakıldıysa
+            else if (dropTarget.classList.contains('drop-zone')) {
+                if (dropTarget.children.length > 0) {
+                    bench.appendChild(dropTarget.children[0]); // İçindekini yolla
+                }
+                dropTarget.appendChild(draggedEl);
+            } 
+            // Eğer yedek kulübesine bırakıldıysa
+            else if (dropTarget.id === 'bench-container' || dropTarget.closest('.bench-container')) {
+                bench.appendChild(draggedEl);
+            }
+        }
+
+        // Sayfa yüklendiğinde İlk 11 verilerini hazırla
+        window.onload = () => {
+            initLineup();
+        };
+
+
+        // --- MİNİ OYUN 1: 10 SORULUK QUİZ ---
+        const allQuestions = [
+            { q: "Dünya Kupası tarihinde en çok gol atan oyuncu?", opts: ["Pelé", "Miroslav Klose", "Ronaldo"], ans: 1 },
+            { q: "İlk Dünya Kupası hangi yıl düzenlendi?", opts: ["1930", "1942", "1950"], ans: 0 },
+            { q: "Türkiye'nin Dünya 3.sü olduğu turnuva?", opts: ["1954", "2008", "2002"], ans: 2 },
+            { q: "En çok Dünya Kupası kazanan ülke (5 Kez)?", opts: ["Almanya", "Brezilya", "İtalya"], ans: 1 },
+            { q: "2022 Dünya Kupası finalinde hat-trick yapan oyuncu?", opts: ["Lionel Messi", "Kylian Mbappe", "Angel Di Maria"], ans: 1 },
+            { q: "Maradona'nın meşhur 'Tanrının Eli' golünü attığı rakip?", opts: ["Almanya", "Brezilya", "İngiltere"], ans: 2 },
+            { q: "Dünya Kupası tarihinde en hızlı golü atan Türk efsane kimdir?", opts: ["Hakan Şükür", "İlhan Mansız", "Hasan Şaş"], ans: 0 },
+            { q: "2010 Dünya Kupası'nı kazanan ülke?", opts: ["Hollanda", "İspanya", "Fransa"], ans: 1 },
+            { q: "2014 Dünya Kupası hangi ülkede düzenlenmiştir?", opts: ["Güney Afrika", "Rusya", "Brezilya"], ans: 2 },
+            { q: "Dünya Kupası'nı hem oyuncu hem de teknik direktör olarak kazanan Fransız efsane?", opts: ["Zinedine Zidane", "Didier Deschamps", "Laurent Blanc"], ans: 1 }
+        ];
+        
+        let qIndex = 0;
+        let quizScore = 0;
+
+        function startQuiz() {
+            qIndex = 0;
+            quizScore = 0;
+            document.getElementById('quiz-restart-btn').style.display = "none";
+            loadQuizQuestion();
+        }
+
+        function loadQuizQuestion() {
+            if (qIndex >= allQuestions.length) {
+                document.getElementById('quiz-progress').innerText = "TEST TAMAMLANDI!";
+                document.getElementById('quiz-question').innerText = `Sonucun: 100 üzerinden ${quizScore * 10} Puan!`;
+                document.getElementById('quiz-options').innerHTML = "";
+                document.getElementById('quiz-feedback').innerText = "Oynadığın için teşekkürler!";
+                document.getElementById('quiz-feedback').style.color = "var(--gold)";
+                document.getElementById('quiz-next-btn').style.display = "none";
+                document.getElementById('quiz-restart-btn').style.display = "block";
+                return;
+            }
+
+            const data = allQuestions[qIndex];
+            document.getElementById('quiz-progress').innerText = `Soru: ${qIndex + 1} / 10`;
+            document.getElementById('quiz-question').innerText = data.q;
+            document.getElementById('quiz-feedback').innerText = "";
+            document.getElementById('quiz-next-btn').style.display = "none";
+            
+            const optionsBox = document.getElementById('quiz-options');
+            optionsBox.innerHTML = "";
+            
+            data.opts.forEach((opt, idx) => {
+                let div = document.createElement('div');
+                div.className = "quiz-option";
+                div.innerText = opt;
+                div.onclick = () => checkAnswer(idx, div);
+                optionsBox.appendChild(div);
+            });
+        }
+
+        function checkAnswer(selected, element) {
+            const correct = allQuestions[qIndex].ans;
+            const allOpts = document.querySelectorAll('.quiz-option');
+            allOpts.forEach(o => o.onclick = null);
+
+            if (selected === correct) {
+                element.style.borderColor = "var(--accent-green)";
+                element.style.backgroundColor = "rgba(42, 157, 143, 0.2)";
+                document.getElementById('quiz-feedback').innerText = "DOĞRU! +10 Puan";
+                document.getElementById('quiz-feedback').style.color = "var(--accent-green)";
+                quizScore++;
+                addScore(10);
+            } else {
+                element.style.borderColor = "var(--accent-red)";
+                element.style.backgroundColor = "rgba(230, 57, 70, 0.2)";
+                allOpts[correct].style.borderColor = "var(--accent-green)";
+                document.getElementById('quiz-feedback').innerText = "YANLIŞ!";
+                document.getElementById('quiz-feedback').style.color = "var(--accent-red)";
+            }
+            document.getElementById('quiz-next-btn').style.display = "block";
+        }
+
+        function nextQuizQuestion() {
+            qIndex++;
+            loadQuizQuestion();
+        }
+        startQuiz();
+
+        // --- MİNİ OYUN 2: ZAMANLAMALI PENALTI ---
+        let penInterval;
+        let penPos = 0;
+        let penDir = 1;
+        let isPenRunning = false;
+
+        function startTimingPenalty() {
+            document.getElementById('pen-restart-btn').style.display = 'none';
+            document.getElementById('pen-shoot-btn').style.display = 'block';
+            document.getElementById('pen-feedback').innerText = "Doğru anı bekle...";
+            document.getElementById('pen-feedback').style.color = "var(--gold)";
+            document.getElementById('pen-gk').style.bottom = "0";
+            document.getElementById('pen-gk').style.left = "50%";
+            
+            penPos = 0;
+            isPenRunning = true;
+            clearInterval(penInterval);
+            
+            penInterval = setInterval(() => {
+                penPos += 3 * penDir;
+                if(penPos >= 96) { penPos = 96; penDir = -1; }
+                if(penPos <= 0) { penPos = 0; penDir = 1; }
+                document.getElementById('timing-cursor').style.left = penPos + '%';
+            }, 20);
+        }
+
+        function shootTimingPenalty() {
+            if(!isPenRunning) return;
+            isPenRunning = false;
+            clearInterval(penInterval);
+            document.getElementById('pen-shoot-btn').style.display = 'none';
+            
+            const gk = document.getElementById('pen-gk');
+            const feedback = document.getElementById('pen-feedback');
+
+            if (penPos >= 33 && penPos <= 65) {
+                gk.style.left = "20%";
+                feedback.innerText = "MÜKEMMEL ZAMANLAMA! GOOOOOL! +20 PUAN";
+                feedback.style.color = "var(--accent-green)";
+                addScore(20);
+            } else {
+                gk.style.bottom = "30px";
+                if(penPos < 33) gk.style.left = "30%";
+                else gk.style.left = "70%";
+                
+                feedback.innerText = "KÖTÜ VURUŞ! DIŞARI GİTTİ VEYA KALECİ ÇIKARDI.";
+                feedback.style.color = "var(--accent-red)";
+            }
+            
+            setTimeout(() => {
+                document.getElementById('pen-restart-btn').style.display = 'block';
+            }, 1000);
+        }
+        startTimingPenalty();
+
+        // --- MİNİ OYUN 3: HAFIZA KARTLARI ---
+        const memoryIcons = ['🏆', '⚽', '🥅', '🧤', '👟', '🏟️', '🥇', '🚩'];
+        let memoryCards = [];
+        let firstCard = null;
+        let secondCard = null;
+        let lockBoard = false;
+        let matchCount = 0;
+
+        function initMemoryGame() {
+            const grid = document.getElementById('memory-grid');
+            grid.innerHTML = "";
+            document.getElementById('memory-restart-btn').style.display = 'none';
+            document.getElementById('memory-feedback').innerText = "Tüm kartları eşleştir.";
+            document.getElementById('memory-feedback').style.color = "var(--text-main)";
+            
+            matchCount = 0;
+            firstCard = null;
+            secondCard = null;
+            lockBoard = false;
+
+            memoryCards = [...memoryIcons, ...memoryIcons];
+            memoryCards.sort(() => 0.5 - Math.random());
+
+            memoryCards.forEach((icon, index) => {
+                const card = document.createElement('div');
+                card.className = "memory-card flipped";
+                card.dataset.icon = icon;
+                card.dataset.index = index;
+                card.innerHTML = "?";
+                card.onclick = () => flipCard(card);
+                grid.appendChild(card);
+            });
+        }
+
+        function flipCard(card) {
+            if (lockBoard) return;
+            if (card === firstCard) return;
+            if (card.classList.contains('matched')) return;
+
+            card.classList.remove('flipped');
+            card.innerHTML = card.dataset.icon;
+
+            if (!firstCard) {
+                firstCard = card;
+                return;
+            }
+
+            secondCard = card;
+            checkForMatch();
+        }
+
+        function checkForMatch() {
+            let isMatch = firstCard.dataset.icon === secondCard.dataset.icon;
+            if (isMatch) {
+                disableCards();
+            } else {
+                unflipCards();
+            }
+        }
+
+        function disableCards() {
+            firstCard.classList.add('matched');
+            secondCard.classList.add('matched');
+            matchCount += 2;
+            resetBoard();
+
+            if (matchCount === memoryCards.length) {
+                document.getElementById('memory-feedback').innerText = "HARİKA HAFIZA! +50 PUAN";
+                document.getElementById('memory-feedback').style.color = "var(--accent-green)";
+                document.getElementById('memory-restart-btn').style.display = 'block';
+                addScore(50);
+            }
+        }
+
+        function unflipCards() {
+            lockBoard = true;
+            setTimeout(() => {
+                firstCard.classList.add('flipped');
+                firstCard.innerHTML = "?";
+                secondCard.classList.add('flipped');
+                secondCard.innerHTML = "?";
+                resetBoard();
+            }, 800);
+        }
+
+        function resetBoard() {
+            firstCard = null;
+            secondCard = null;
+            lockBoard = false;
+        }
+
+        initMemoryGame();
+    </script>
+</body>
+</html>
+"""
+
+with open("index.html", "w", encoding="utf-8") as f:
+    f.write(html_content)
+print("File successfully created as index.html")
+
